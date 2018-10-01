@@ -3,21 +3,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define HASH_SIZE 9999889
-#define MAGIC_PRIME 9999667
-//#define HASH_SIZE 17
-//#define MAGIC_PRIME 13
+//#define HASH_SIZE 9999889
+//#define MAGIC_PRIME 9999667
+#define HASH_SIZE 17
+#define MAGIC_PRIME 13
 
-#define FILE_NAME "dataDogs.dat
+#define FILE_NAME "dataDogs.dat"
 #define FOLDER_NAME "/medicalrecords/"
 
 #define HANDLE_ERROR(msg) perror(msg);
 
 typedef enum { false, true } bool;
-
-long long regIndex = 0;
-int hashSize = 0;
-struct DogType* registers[HASH_SIZE];
 
 struct DogType {
     char name[32];
@@ -35,12 +31,17 @@ struct Item {
     struct DogType* value;
 };
 
+struct DogType* registers;
 struct Item* table[HASH_SIZE];
+bool memTable = false;
+long long regIndex = 0;
+int hashSize = 0;
 
 /**
  * DJB2 hash function over @param str char array
  */
 unsigned long hash(unsigned char *str) {
+    toLower(str);
     unsigned long hash = 5381;
     int c;
     while (c = *str++)
@@ -57,10 +58,14 @@ unsigned long hash2(unsigned long key) {
 }
 
 /**
- * Initialize the Hash Table with size @param HASH_SIZE
+ * Initialize the Hash Table and the Registers with size @param HASH_SIZE
  */
-void initHash() {
-    *table = (struct Item*) calloc(HASH_SIZE, sizeof(struct Item));
+void initMemory() {
+    if(!memTable) {
+        *table = (struct Item*) calloc(HASH_SIZE, sizeof(struct Item));
+        registers = calloc(HASH_SIZE, sizeof(struct DogType));
+        memTable = true;
+    }
     //*table = (struct Item*) malloc(sizeof(struct Item) * HASH_SIZE);
     //memset(*table, -1, sizeof(table));
 }
@@ -86,12 +91,14 @@ void addInHash(struct DogType* dogType) {
     mempcpy(&newItem->value, dogType, sizeof(struct DogType*));
     mempcpy(&newItem->regNumber, &regIndex, sizeof(int));
 
-    registers[regIndex++] = dogType;
+    registers[regIndex++] = *dogType;
 
     table[finalPosition] = newItem;
     hashSize++;
 
     free(newItem);
+
+    saveState();
 }
 
 /**
@@ -111,9 +118,11 @@ void removeInHash(char name[32], int regNumber) {
     mempcpy(deleted.type, "-1", 1);
     mempcpy(deleted.name, "-1", 1);
 
-    registers[regNumber] = &deleted;
+    registers[regNumber] = deleted;
     table[finalPosition] = 0;
     hashSize--;
+
+    saveState();
 }
 
 /**
@@ -125,15 +134,19 @@ void searchInHash(char* name) {
     int i = 0;
     unsigned long finalPosition = 0;
 
+    //printf("%s %d %d %d", name, position%HASH_SIZE, step, finalPosition);
+
     do {
         finalPosition = (position % HASH_SIZE + i++ * step) % HASH_SIZE;
         const char* n1 = table[finalPosition]->key;
 
         if(strcmp(&n1, &name)) {
-            long long tmp = *(&table[i]->regNumber);
-            printf("%lld\n", tmp);
+            //printf("YEEEs", n1);
+            printf("%s - %s\n", n1, name);
+            long long tmp = table[finalPosition]->regNumber;
+            printf("%lld - %s\n", tmp, name);
         }
-    } while(table[finalPosition] == 0);
+    } while(table[finalPosition] != 0);
 }
 
 void printTable(){
@@ -171,13 +184,20 @@ char getSex(char p) {
 	}
 }
 
+void toLower(char *str) {
+    for(; *str; ++str) *str = tolower(*str);
+}
+
 /**
  * Función donde se solicitan datos y almacenan
  */
 void record(){
 	struct DogType *p =(struct DogType*) malloc(sizeof(struct DogType));//Reserva espacio para estructura
-	printf("Nombre: ");//Solicita los datos de la mascota
-	scanf("%s", p->name);
+	char n[32];
+	printf("Nombre: ");
+	scanf("%s", n);
+	toLower(n);
+    mempcpy(p->name, &n, sizeof(n));
 	printf("Tipo: ");
 	scanf("%s", p->type);
 	printf("Edad: ");
@@ -193,14 +213,6 @@ void record(){
 	mempcpy((&p->sex), &tmp, sizeof(char));
 
 	addInHash(p);
-
-	//FILE *f;
-    //int res;
-    //res = fopen(FILE_NAME, "w+");
-    //res = fwrite(*table, sizeof(struct Item), sizeof(table), f);
-    //res = fclose(f);
-
-	printf("Se ha guardado su registro exitosamente");
 }
 
 void showRecord() {
@@ -210,8 +222,10 @@ void showRecord() {
     rec--;
 
     int res = 0;
-    //printf(registers[rec]->type);
-    if(registers[rec] != 0) {
+
+    printf("%s",registers[rec].name);
+
+    if(&registers[rec] != 0) {
         FILE *file;
         char fName[200];
         strcpy(&fName, "medicalrecords/");
@@ -220,8 +234,8 @@ void showRecord() {
         sprintf(it, "%d", res);
         strcat(&fName, &it);
 
-        //printf("Name: %s, Record: %d\n", registers[rec]->name, rec);
-        strcat(&fName, registers[rec]->name);
+        printf("Name: %s, Record: %d\n", registers[rec].name, rec);
+        strcat(&fName, registers[rec].name);
         strcat(&fName, ".txt");
         res = fopen(&fName, "a+");
         if(res<-1)
@@ -243,10 +257,8 @@ void deleteRecord() {
     rec--;
     int res = 0;
 
-    const char *empty = "-1";
-    const char *str = registers[rec]->type;
     //printf(registers[rec]->type);
-    if(registers[rec] != 0) {
+    if(&registers[rec] != 0) {
         FILE *file;
         char fName[200];
         strcpy(&fName, FOLDER_NAME);
@@ -256,7 +268,7 @@ void deleteRecord() {
         strcat(&fName, &it);
 
         //printf("Name: %s, Record: %d\n", registers[rec]->name, rec);
-        strcat(&fName, registers[rec]->name);
+        strcat(&fName, registers[rec].name);
         strcat(&fName, ".txt");
         res = fopen(&fName, "a+");
         if(res<-1)
@@ -271,9 +283,114 @@ void deleteRecord() {
     }
 }
 
+void closeprogram() {
+    exit(0);
+}
+
+void printReg() {
+    for(int i = 0; i < regIndex; i++) {
+        printf("%d\t%s - %d\n", i, registers[i].name, registers[i].age);
+    }
+}
+
+/**
+ * Load the data saved in some points of process execution
+ */
+void loadState() {
+    initMemory();
+
+    FILE *f;
+    f = fopen(FILE_NAME, "rb+");
+    if(f == NULL) {
+        //HANDLE_ERROR("Error abriendo el archivo de persistencia");
+        return;
+    }
+
+    int r = fread(&regIndex, sizeof(long long), 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error leyendo el número de registro");
+        return;
+    }
+
+    r = fread(&hashSize, sizeof(int), 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error leyendo el tamaño de la tabla hash");
+        return;
+    }
+
+    /*
+    r = fread(table, sizeof(struct Item) * HASH_SIZE, 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error leyendo el tamaño de la estructura");
+        return;
+    }*/
+
+    r = fread(registers, sizeof(struct DogType) * regIndex, 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error leyendo los registros");
+        return;
+    }
+
+    r = fclose(f);
+    if(r == EOF){
+        HANDLE_ERROR("Error cerrando el archivo");
+        return;
+    }
+
+    printf("Se ha cargado su registro exitosamente");
+}
+
+/**
+ * Handle the data persistence in system
+ */
+void saveState() {
+    /*FILE *f;
+    f = fopen(FILE_NAME, "wb+");
+
+    if(f == NULL) {
+        HANDLE_ERROR("Error abriendo el archivo de persistencia");
+        return;
+    }
+
+    // Save the struct size for read
+    int r = fwrite(&regIndex, sizeof(long long), 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error guardando el numero de registros");
+        return;
+    }
+
+    r = fwrite(&hashSize, sizeof(int), 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error guardando el tamaño de la tabla");
+        return;
+    }
+
+    r = fwrite(registers, sizeof(struct DogType) * regIndex, 1, f);
+    if(r <= 0){
+        HANDLE_ERROR("Error guardando los registros");
+        return;
+    }
+
+    r = fclose(f);
+    if(r == EOF){
+        HANDLE_ERROR("Error cerrando el archivo");
+        return;
+    }
+
+    printf("Se ha guardado su registro exitosamente");*/
+}
+
+void searchRecords() {
+    printf("Digite el nombre que desea buscar: ");
+    char nm[32];
+    scanf("%s", &nm);
+    printf("%s", nm);
+    searchInHash(nm);
+}
+
 int main() {
-    initHash();
-    *registers = (struct DogType*) calloc(HASH_SIZE, sizeof(struct DogType));
+    initMemory();
+    loadState();
 
 	while(true) {
 		int opc;
@@ -293,9 +410,13 @@ int main() {
 
 			wait();
 		}else if(opc == 4){
+		    printTable();
+		    printReg();
+		    wait();
+		    searchRecords();
 			wait();
 		}else if (opc == 5){
-			exit(0);
+			closeprogram();
 		}
 	}
 }
