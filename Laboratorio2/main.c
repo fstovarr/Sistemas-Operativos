@@ -10,6 +10,7 @@
 #include "FileManager.h"
 #include "Tests.h"
 #include "ServerController.h"
+#include "Logger.h"
 
 //#define VERBOSE_MODE
 
@@ -23,6 +24,7 @@ void initProcess() {
     loadFirstRecord();
     loadLastRecord();
     initHashTable(firstTime);
+    initLogger();
 
     if(firstTime) {
         fillWithRandomAnimals();
@@ -35,6 +37,7 @@ void initProcess() {
 void enterRecord() {
     receiveMessage(dummyPet, sizeof(struct DogType));
 	insert(dummyPet);
+    registerOperation(getClientIp(), INSERTION, dummyPet->name, sizeof(dummyPet->name));
 }
 
 void showRecord() {
@@ -42,20 +45,22 @@ void showRecord() {
     receiveMessage(&rec, sizeof(int));
 
     struct Node* node = (struct Node*) calloc(1, sizeof(struct Node));
-    char *name = (char*) malloc(100);
+    if(rec >= 0 && getNodeByEntryOrder(node, rec) == true && node->key != -1) {
+        char *name = (char*) calloc(1, 100);
 
-    if(getNodeByEntryOrder(node, rec) == true && node->key != -1) {
         sendMessage(&rec, sizeof(int));
         buildName(node->data.name, rec + 1, name);
         sendFile(name, 100);
         receiveFile();
+
+        free(name);
     } else {
         rec = -1;
         sendMessage(&rec, sizeof(int));
     }
 
     free(node);
-    free(name);
+    registerIntOperation(getClientIp(), READING, rec);
 }
 
 void deleteRecord() {
@@ -65,15 +70,34 @@ void deleteRecord() {
     struct Node* node = (struct Node*) calloc(1, sizeof(struct Node));
     char *name = (char*) malloc(100);
 
+    #ifdef VERBOSE_MODE
+    printf("Deletion finished.\n");
+    #endif // VERBOSE_MODE
+
     if(getNodeByEntryOrder(node, rec) == true && node->key != -1) {
+        #ifdef VERBOSE_MODE
+        printf("Deletion finished.\n");
+        #endif // VERBOSE_MODE
         buildName(node->data.name, rec + 1, name);
         deleteFile(name);
+        #ifdef VERBOSE_MODE
+        printf("Deletion finished.\n");
+        #endif // VERBOSE_MODE
         removeItem(node);
         sendMessage(&rec, sizeof(int));
+        #ifdef VERBOSE_MODE
+        printf("Deletion finished.\n");
+        #endif // VERBOSE_MODE
     } else {
         rec = -1;
         sendMessage(&rec, sizeof(int));
     }
+
+    registerIntOperation(getClientIp(), DELETION, rec);
+
+    #ifdef VERBOSE_MODE
+    printf("Deletion finished.\n");
+    #endif // VERBOSE_MODE
 
     free(node);
     free(name);
@@ -83,6 +107,7 @@ void searchRecord() {
     char nm[32];
     receiveMessage(nm, sizeof(nm));
     search(nm);
+    registerOperation(getClientIp(), READING, nm, sizeof(nm));
 }
 
 void notifySearchFinished() {

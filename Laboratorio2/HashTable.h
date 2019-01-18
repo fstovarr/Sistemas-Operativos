@@ -1,6 +1,6 @@
 #include <stdbool.h>
-//#define HASH_SIZE 6000011
-#define HASH_SIZE 17
+#define HASH_SIZE 6000011
+//#define HASH_SIZE 17
 //#define MAGIC_PRIME 13
 
 struct DogType {

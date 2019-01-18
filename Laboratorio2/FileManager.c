@@ -4,17 +4,23 @@
 #include "HashTable.h"
 #include "FileManager.h"
 
+//#define VERBOSE_MODE
+
 bool initFile() {
     file = fopen(FILE_NAME, "rb+");
     if(file == NULL) {
         file = fopen(FILE_NAME, "wb+");
         if(file == NULL) {
+            #ifdef VERBOSE_MODE
             HANDLE_ERROR("Error opening/creating file.");
+            #endif // VERBOSE_MODE
             return false;
         } else {
             fclose(file);
             file = fopen(FILE_NAME, "rb+");
+            #ifdef VERBOSE_MODE
             printf("File created succesfully\n");
+            #endif // VERBOSE_MODE
             return true;
         }
     } else {
@@ -85,7 +91,9 @@ void recordHashItemInCurrentPosition(void* item) {
 
 void recordTable(struct HashItem* hashArray, int hashSize) {
     if(fwrite(hashArray, sizeof(struct HashItem) * hashSize, 1, file) > 0) {
+        #ifdef VERBOSE_MODE
         printf("Hash table initialized\n");
+        #endif // VERBOSE_MODE
     } else {
         HANDLE_ERROR("Hash table initialization failed):");
     }
@@ -133,7 +141,9 @@ long getCurrentPosition() {
 
 void loadFirstRecord() {
     if(fread(&firstReg, sizeof(long), 1, file) <= 0) {
+        #ifdef VERBOSE_MODE
         HANDLE_ERROR("Error reading first register");
+        #endif // VERBOSE_MODE
     }
 }
 
@@ -141,7 +151,9 @@ void loadLastRecord() {
     setFileIndicator(sizeof(long));
 
     if(fread(&lastReg, sizeof(long), 1, file) <= 0) {
+        #ifdef VERBOSE_MODE
         HANDLE_ERROR("Error reading last register");
+        #endif // VERBOSE_MODE
     }
 }
 

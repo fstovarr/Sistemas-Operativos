@@ -40,6 +40,10 @@
 		</Unit>
 		<Unit filename="HashTable.h" />
 		<Unit filename="Laboratorio1.h" />
+		<Unit filename="Logger.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Logger.h" />
 		<Unit filename="ServerController.c">
 			<Option compilerVar="CC" />
 		</Unit>

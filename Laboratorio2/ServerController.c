@@ -44,8 +44,14 @@ bool acceptConnection() {
 
     if(socketClient == -1) {
         HANDLE_ERROR("Error accepting the connection.");
+        memset(ipDirection, -1, sizeof(ipDirection));
         return false;
     }
+
+    ipv4Addr = (struct sockaddr_in*)&dummyAddr;
+    ipAddr = ipv4Addr->sin_addr;
+
+    inet_ntop(AF_INET, &ipAddr, ipDirection, sizeof(ipDirection));
 
     return true;
 }
@@ -120,6 +126,11 @@ void sendMessage(void* message, size_t len) {
     #ifdef VERBOSE_MODE
     printf("Message sent.\n");
     #endif // VERBOSE_MODE
+}
+
+char *getClientIp() {
+    if(ipDirection[0] == -1) return NULL;
+    return ipDirection;
 }
 
 void closeConnection() {

@@ -26,8 +26,9 @@ void fillWithRandomAnimals() {
 
     struct DogType *p = (struct DogType*) malloc(sizeof(struct DogType));
     //char n[32];
-
+    #ifdef VERBOSE_MODE
     printf("Loading test animals\n");
+    #endif // VERBOSE_MODE
 
     int n = 0;
     for(int i = 0; i < ANIMALS; i++) {

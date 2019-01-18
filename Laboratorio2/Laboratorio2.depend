@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1547798285 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/FileManager.c
+1547807664 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/FileManager.c
 	<stdio.h>
 	"Laboratorio1.h"
 	"HashTable.h"
@@ -25,7 +25,7 @@
 	"HashTable.h"
 	"FileManager.h"
 
-1547792441 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Tests.c
+1547807603 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Tests.c
 	<string.h>
 	<stdio.h>
 	<stdlib.h>
@@ -35,7 +35,7 @@
 
 1547704530 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Tests.h
 
-1547800221 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/main.c
+1547807375 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/main.c
 	<string.h>
 	<stdlib.h>
 	<stdio.h>
@@ -46,8 +46,9 @@
 	"FileManager.h"
 	"Tests.h"
 	"ServerController.h"
+	"Logger.h"
 
-1547798547 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.c
+1547804118 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.c
 	<sys/types.h>
 	<sys/socket.h>
 	<arpa/inet.h>
@@ -60,9 +61,20 @@
 	"ServerController.h"
 	"HashTable.h"
 
-1547800228 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.h
+1547803957 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.h
 	<sys/types.h>
 	<sys/socket.h>
 	<netinet/in.h>
 	<stdbool.h>
+
+1547804525 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Logger.h
+
+1547806533 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Logger.c
+	<string.h>
+	<stdio.h>
+	<time.h>
+	<locale.h>
+	<stdlib.h>
+	"Laboratorio1.h"
+	"Logger.h"
 
