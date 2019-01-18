@@ -1,0 +1,68 @@
+# depslib dependency file v1.0
+1547798285 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/FileManager.c
+	<stdio.h>
+	"Laboratorio1.h"
+	"HashTable.h"
+	"FileManager.h"
+
+1547796373 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Laboratorio1.h
+	<stdio.h>
+	<stdbool.h>
+
+1547782584 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/HashTable.h
+	<stdbool.h>
+
+1547694400 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/FileManager.h
+
+1547796285 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/HashTable.c
+	<string.h>
+	<stdio.h>
+	<stdbool.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+	"Laboratorio1.h"
+	"HashTable.h"
+	"FileManager.h"
+
+1547792441 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Tests.c
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	"Tests.h"
+	"Laboratorio1.h"
+	"HashTable.h"
+
+1547704530 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/Tests.h
+
+1547800221 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/main.c
+	<string.h>
+	<stdlib.h>
+	<stdio.h>
+	<time.h>
+	<stdbool.h>
+	"Laboratorio1.h"
+	"HashTable.h"
+	"FileManager.h"
+	"Tests.h"
+	"ServerController.h"
+
+1547798547 source:/home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.c
+	<sys/types.h>
+	<sys/socket.h>
+	<arpa/inet.h>
+	<unistd.h>
+	<stdbool.h>
+	<sys/sendfile.h>
+	<stdio.h>
+	<strings.h>
+	"Laboratorio1.h"
+	"ServerController.h"
+	"HashTable.h"
+
+1547800228 /home/fabiotovar/Proyectos/Sistemas Operativos/Laboratorio2/ServerController.h
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	<stdbool.h>
+
