@@ -1,0 +1,26 @@
+CC=gcc
+
+EXECUTABLE=client
+
+SOURCEDIR := src
+OBJDIR := obj
+
+SOURCES := $(wildcard $(SOURCEDIR)/*.c)
+OBJECTS := $(SOURCES:$(SOURCEDIR)/%.c=$(OBJDIR)/%.o)
+
+.PHONY: clean
+
+all: $(EXECUTABLE)
+
+$(OBJECTS): $(OBJDIR)/%.o: $(SOURCEDIR)/%.c | $(OBJDIR)
+	$(CC) -c $< -o $@
+
+$(OBJDIR):
+	@mkdir $(OBJDIR)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) -o $(EXECUTABLE) $^
+
+clean:
+	rm -f $(EXECUTABLE)
+	rm -R $(OBJDIR)
