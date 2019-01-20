@@ -3,34 +3,35 @@ CC=gcc
 EXECUTABLE=server
 PETSFOLDER=medicalrecords
 
+EXECUTABLEDIR := bin
 SOURCEDIR := src
 OBJDIR := obj
 
 SOURCES := $(wildcard $(SOURCEDIR)/*.c)
 OBJECTS := $(SOURCES:$(SOURCEDIR)/%.c=$(OBJDIR)/%.o)
+ 
+.PHONY: all prepare cleanrecords fullclean clean
 
-.PHONY: clean
-
-all: clean prepare $(EXECUTABLE)
+all: prepare $(EXECUTABLE)
 
 prepare:
-	@mkdir $(PETSFOLDER)
+	-@mkdir $(PETSFOLDER)
+	-@mkdir $(EXECUTABLEDIR)
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SOURCEDIR)/%.c | $(OBJDIR)
 	$(CC) -c $< -o $@
 
 $(OBJDIR):
-	@mkdir $(OBJDIR)
+	-@mkdir $(OBJDIR)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) -o $(EXECUTABLE) $^
+	$(CC) -o $(EXECUTABLEDIR)/$(EXECUTABLE) $^
 
 cleanrecords:
-	rm *.dat
+	-rm *.dat
 
 fullclean: cleanrecords clean
 
 clean:
-	rm -f $(EXECUTABLE)
-	rm -R $(PETSFOLDER)
-	rm -R $(OBJDIR)
+	-rm -R $(PETSFOLDER)
+	-rm -R $(OBJDIR)

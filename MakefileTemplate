@@ -2,25 +2,28 @@ CC=gcc
 
 EXECUTABLE=client
 
+EXECUTABLEDIR := bin
 SOURCEDIR := src
 OBJDIR := obj
 
 SOURCES := $(wildcard $(SOURCEDIR)/*.c)
 OBJECTS := $(SOURCES:$(SOURCEDIR)/%.c=$(OBJDIR)/%.o)
 
-.PHONY: clean
+.PHONY: all clean prepare
 
-all: $(EXECUTABLE)
+all: prepare $(EXECUTABLE)
+
+prepare:
+	-@mkdir $(EXECUTABLEDIR)
 
 $(OBJECTS): $(OBJDIR)/%.o: $(SOURCEDIR)/%.c | $(OBJDIR)
 	$(CC) -c $< -o $@
 
 $(OBJDIR):
-	@mkdir $(OBJDIR)
+	-@mkdir $(OBJDIR)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) -o $(EXECUTABLE) $^
+	$(CC) -o $(EXECUTABLEDIR)/$(EXECUTABLE) $^
 
 clean:
-	rm -f $(EXECUTABLE)
-	rm -R $(OBJDIR)
+	-rm -R $(OBJDIR)
