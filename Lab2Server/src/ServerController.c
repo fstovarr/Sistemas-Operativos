@@ -46,7 +46,7 @@ bool acceptConnection() {
     socketClient = accept(socketServer, (struct sockaddr*) &dummyAddr, &addrlen);
 
     if(socketClient == -1) {
-        HANDLE_ERROR("Error accepting the connection.");
+        HANDLE_ERROR("Error with connection.");
         memset(ipDirection, -1, sizeof(ipDirection));
         return false;
     }

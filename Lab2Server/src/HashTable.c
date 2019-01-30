@@ -46,7 +46,8 @@ void toLower(char *str) {
  */
 unsigned long hash(char *str) {
     toLower(str);
-    unsigned long hash = 5381;
+    //unsigned long hash = 5381;
+    unsigned long hash = HASH_SIZE;
     int c;
     while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */

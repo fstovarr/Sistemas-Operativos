@@ -8,7 +8,7 @@
 #include "HashTable.h"
 
 void fillWithRandomAnimals() {
-    namesFile = fopen("names.txt", "r");
+    namesFile = fopen(NAME_TEST_FILE, "r");
     char* words[1005][20];
     char* line = NULL;
     size_t len = 0;

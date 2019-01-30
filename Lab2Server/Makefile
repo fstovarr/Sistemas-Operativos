@@ -33,5 +33,6 @@ cleanrecords:
 fullclean: cleanrecords clean
 
 clean:
+	-rm -Rf $(EXECUTABLEDIR)
 	-rm -R $(PETSFOLDER)
 	-rm -R $(OBJDIR)

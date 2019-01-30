@@ -141,11 +141,11 @@ char* subString (const char* input, int offset, int len, char* dest) {
   int input_len = strlen (input);
 
   if (offset + len > input_len) {
-     return NULL;
-  }
+   return NULL;
+}
 
-  strncpy (dest, input + offset, len);
-  return dest;
+strncpy (dest, input + offset, len);
+return dest;
 }
 
 void selectOption(int option) {
@@ -155,34 +155,34 @@ void selectOption(int option) {
 
     switch(option){
         case 1:
-            enterRecord();
-            break;
+        enterRecord();
+        break;
         case 2:
-            showRecord();
-            break;
+        showRecord();
+        break;
         case 3:
-            deleteRecord();
-            break;
+        deleteRecord();
+        break;
         case 4:
-            searchRecord();
-            break;
+        searchRecord();
+        break;
         case 5:
             #ifdef VERBOSE_MODE
-            printf("Closing connection.\n");
+        printf("Closing connection.\n");
             #endif // VERBOSE_MODE
-            break;
+        break;
         case 6:
-            printTable();
-            break;
+        printTable();
+        break;
         case 7:
-            printf("First record: %ld - Last record: %ld\n", firstReg, lastReg);
-            printFirstNodes(5);
-            break;
+        printf("First record: %ld - Last record: %ld\n", firstReg, lastReg);
+        printFirstNodes(5);
+        break;
         default:
             #ifdef VERBOSE_MODE
-            HANDLE_ERROR("Not valid option.");
+        HANDLE_ERROR("Not valid option.");
             #endif // VERBOSE_MODE
-            break;
+        break;
     }
 }
 
@@ -194,17 +194,19 @@ int main() {
     #endif // VERBOSE_MODE
     int option = 0;
 
-    while(acceptConnection()) {
+    while(true) {
+        while(acceptConnection()) {
         #ifdef VERBOSE_MODE
-        printf("Client connected successfully\n");
+            printf("Client connected successfully\n");
         #endif // VERBOSE_MODE
 
-        while(option != 5) {
-            receiveMessage(&option, sizeof(int));
-            selectOption(option);
-        }
+            while(option != 5) {
+                receiveMessage(&option, sizeof(int));
+                selectOption(option);
+            }
 
-        option = 0;
+            option = 0;
+        }
     }
 }
 
