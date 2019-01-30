@@ -16,7 +16,7 @@ void requestConnection() {
         return;
     }
 
-    dummyAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    dummyAddr.sin_addr.s_addr = inet_addr(IP_SERVER);
     dummyAddr.sin_family = AF_INET;
     dummyAddr.sin_port = htons(8888);
 
@@ -46,7 +46,10 @@ char* receiveFile() {
     printf("Reading the file: ");
     #endif // VERBOSE_MODE
     receiveMessage(&fileName, sizeof(fileName));
+
+    #ifdef VERBOSE_MODE
     printf("%s\n", fileName);
+    #endif // VERBOSE_MODE
 
     if((file = fopen(fileName, "w+")) == NULL) {
         HANDLE_ERROR("Error creating file.");

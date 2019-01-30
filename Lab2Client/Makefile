@@ -28,5 +28,6 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) -o $(EXECUTABLEDIR)/$(EXECUTABLE) $^
 
 clean:
+	-rm -Rf $(EXECUTABLEDIR)
 	-rm -R $(PETSFOLDER)
 	-rm -R $(OBJDIR)

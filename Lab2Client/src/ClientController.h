@@ -1,3 +1,7 @@
+#define IP_SERVER "127.0.0.1"
+
+// ------ Don't touch any line below that ----- //
+
 #include <stdio.h>
 #include <netinet/in.h>
 
